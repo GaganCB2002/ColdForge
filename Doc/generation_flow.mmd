@@ -1,0 +1,11 @@
+graph TD
+    A[User clicks 'Generate'] --> B(AIService receives target data)
+    B --> C[Query FAISS Vector Store]
+    C -->|Top 3 matches| D[Inject RAG Context into PromptTemplate]
+    D --> E[Send Prompt to Local Ollama Daemon]
+    E -->|Gemma 2B processing| F[Stream back text with tone/style]
+    F --> G[Frontend renders editable email/resume]
+    
+    style A fill:#d4f1f4,stroke:#333,stroke-width:2px
+    style E fill:#f4d4d4,stroke:#333,stroke-width:2px
+    style G fill:#d4f4d4,stroke:#333,stroke-width:2px

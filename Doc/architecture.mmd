@@ -1,0 +1,31 @@
+graph TD
+    User([User]) --> Frontend
+    subgraph Frontend [React 19 + Vite]
+        UI[User Interface]
+        State[Zustand + React Query]
+        Form[React Hook Form]
+    end
+    Frontend -- REST API / JWT --> Backend
+    
+    subgraph Backend [FastAPI + Python]
+        Auth[JWT Authentication]
+        API[API Router]
+        Service[Business Logic / AI Service]
+        DB[(SQLite/PostgreSQL)]
+    end
+    API --> Auth
+    Auth --> Service
+    Service --> DB
+    
+    subgraph AIEngine [AI & RAG Engine]
+        LangChain[LangChain]
+        FAISS[(FAISS Vector Store)]
+        LLM[Ollama - Gemma 2B]
+    end
+    Service --> LangChain
+    LangChain --> FAISS
+    LangChain --> LLM
+    
+    style Frontend fill:#f9f,stroke:#333,stroke-width:2px
+    style Backend fill:#bbf,stroke:#333,stroke-width:2px
+    style AIEngine fill:#bfb,stroke:#333,stroke-width:2px

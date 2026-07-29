@@ -1,0 +1,10 @@
+graph TD
+    A[User Uploads PDF/DOCX] --> B(FastAPI Endpoint)
+    B --> C{LangChain Loaders}
+    C -->|Extract Text| D[RecursiveCharacterTextSplitter]
+    D -->|1000 char chunks| E[HuggingFace BGE Embeddings]
+    E -->|Vectors| F[(FAISS Vector DB)]
+    F --> G[Project specific Index saved]
+    
+    style A fill:#f9d0c4,stroke:#333,stroke-width:2px
+    style F fill:#c4e0f9,stroke:#333,stroke-width:2px

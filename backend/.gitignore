@@ -1,0 +1,20 @@
+# Python
+__pycache__/
+*.py[cod]
+*.egg-info/
+dist/
+*.egg
+
+# Virtual environment
+venv/
+
+# Storage — uploaded documents and generated indexes
+storage/
+faiss_index/
+
+# Database
+*.db
+*.sqlite3
+
+# Environment
+.env
