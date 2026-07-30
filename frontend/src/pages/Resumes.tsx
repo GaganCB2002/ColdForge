@@ -1,11 +1,11 @@
 import { useEffect, useState } from 'react';
 import {
   FileText, Plus, Building2, Target, Download, Trash2,
-  RefreshCw, Sparkles, CheckCircle2, XCircle, AlertTriangle,
-  TrendingUp, Lightbulb, Award, Loader2, Eye, BarChart3, FileSpreadsheet, Copy, Check
+  Sparkles, CheckCircle2, XCircle, AlertTriangle,
+  TrendingUp, Lightbulb, Award, Loader2, BarChart3, FileSpreadsheet, Copy, Check
 } from 'lucide-react';
 import api from '../lib/api';
-import { resumeTemplates, ResumeTemplate } from '../data/resumeTemplates';
+import { resumeTemplates, type ResumeTemplate } from '../data/resumeTemplates';
 
 interface Resume {
   id: number;
@@ -123,11 +123,6 @@ export default function Resumes() {
     return 'text-destructive';
   };
 
-  const getScoreBg = (score: number) => {
-    if (score >= 80) return 'bg-success/10';
-    if (score >= 60) return 'bg-warning/10';
-    return 'bg-destructive/10';
-  };
 
   return (
     <div>

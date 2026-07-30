@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     JWT_SECRET: str
     JWT_REFRESH_SECRET: str
     GEMINI_API_KEY: str
-    GEMINI_MODEL: str = "gemini-1.5-pro"
+    GEMINI_MODEL: str = "gemini-1.5-flash"
     EMBEDDING_MODEL: str = "BAAI/bge-small-en-v1.5"
     VECTOR_STORE: str = "faiss"
     UPLOAD_DIRECTORY: str = "./storage/documents"
