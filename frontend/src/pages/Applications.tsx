@@ -180,7 +180,11 @@ export default function Applications() {
   }
 
   return (
-    <div>
+    <motion.div
+      initial={{ opacity: 0, y: 16 }}
+      animate={{ opacity: 1, y: 0 }}
+      transition={{ duration: 0.5, ease: easeOut }}
+    >
       <div className="flex items-center justify-between mb-8">
         <div>
           <h1 className="text-2xl font-bold tracking-tight">Applications</h1>
@@ -204,36 +208,45 @@ export default function Applications() {
                 <th className="w-10 px-4 py-3" />
               </tr>
             </thead>
-            <tbody>
-              {applications.map((app) => (
-                <tr
-                  key={app.id}
-                  onClick={() => setSelected(app)}
-                  className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors cursor-pointer group"
-                >
-                  <td className="px-4 py-3.5">
-                    <div className="flex items-center gap-3">
-                      <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">{app.logo}</div>
-                      <span className="font-medium">{app.company}</span>
-                    </div>
-                  </td>
-                  <td className="px-4 py-3.5 text-muted-foreground">{app.role}</td>
-                  <td className="px-4 py-3.5">
-                    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[app.status] || 'bg-muted text-muted-foreground'}`}>
-                      {app.status}
-                    </span>
-                  </td>
-                  <td className="px-4 py-3.5 text-muted-foreground">{app.date}</td>
-                  <td className="px-4 py-3.5">
-                    <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
-                  </td>
-                </tr>
-              ))}
-            </tbody>
+            <motion.tbody
+                initial="hidden"
+                whileInView="visible"
+                viewport={{ once: true, margin: '-40px' }}
+                variants={{ hidden: {}, visible: { transition: { staggerChildren: 0.05 } } }}
+              >
+                {applications.map((app) => (
+                  <motion.tr
+                    key={app.id}
+                    variants={{
+                      hidden: { opacity: 0, y: 14 },
+                      visible: { opacity: 1, y: 0, transition: { duration: 0.4, ease: easeOut } },
+                    }}
+                    onClick={() => setSelected(app)}
+                    className="border-b border-border last:border-0 hover:bg-muted/30 transition-colors cursor-pointer group"
+                  >
+                    <td className="px-4 py-3.5">
+                      <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-xs font-bold text-primary">{app.logo}</div>
+                        <span className="font-medium">{app.company}</span>
+                      </div>
+                    </td>
+                    <td className="px-4 py-3.5 text-muted-foreground">{app.role}</td>
+                    <td className="px-4 py-3.5">
+                      <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium ${statusColors[app.status] || 'bg-muted text-muted-foreground'}`}>
+                        {app.status}
+                      </span>
+                    </td>
+                    <td className="px-4 py-3.5 text-muted-foreground">{app.date}</td>
+                    <td className="px-4 py-3.5">
+                      <ChevronRight className="w-4 h-4 text-muted-foreground opacity-0 group-hover:opacity-100 transition-opacity" />
+                    </td>
+                  </motion.tr>
+                ))}
+              </motion.tbody>
           </table>
         </div>
       </div>
-    </div>
+    </motion.div>
   );
 }
 

@@ -73,9 +73,7 @@ export default function ProjectDetail() {
     formData.append('doc_type', 'knowledge_base');
 
     try {
-      await api.post('/api/documents/', formData, {
-        headers: { 'Content-Type': 'multipart/form-data' }
-      });
+      await api.post('/api/documents/', formData);
       setUploadSuccess('Document successfully indexed to knowledge base!');
       setFile(null);
       fetchProjectData();
@@ -460,12 +458,12 @@ export default function ProjectDetail() {
                     </div>
                     <div className="flex items-center space-x-1">
                       <a
-                        href={`mailto:?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`}
+                        href={`https://mail.google.com/mail/?view=cm&fs=1&tf=1&su=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="text-muted-foreground hover:text-foreground p-2 rounded-md hover:bg-muted transition-colors border border-transparent hover:border-border focus:outline-none focus:ring-2 focus:ring-primary focus:ring-offset-2 focus:ring-offset-background"
-                        aria-label="Send Email"
-                        title="Send via Email Client"
+                        aria-label="Open in Gmail"
+                        title="Open in Gmail"
                       >
                         <Mail className="w-5 h-5" aria-hidden="true" />
                       </a>

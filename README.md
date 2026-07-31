@@ -11,6 +11,7 @@
   <img src="https://img.shields.io/badge/TypeScript-007ACC?style=for-the-badge&logo=typescript&logoColor=white" alt="TypeScript"/>
   <img src="https://img.shields.io/badge/Tailwind_CSS-38B2AC?style=for-the-badge&logo=tailwind-css&logoColor=white" alt="Tailwind"/>
   <img src="https://img.shields.io/badge/Gemini-8E75B2?style=for-the-badge&logo=google&logoColor=white" alt="Gemini"/>
+  <img src="https://img.shields.io/badge/Ollama-000000?style=for-the-badge&logo=ollama&logoColor=white" alt="Ollama"/>
 </p>
 
 <div align="center">
@@ -22,7 +23,7 @@
   
   <br/>
   
-  <p><i>A full-stack AI-powered platform that generates personalized cold emails, crafts tailored resumes, and predicts ATS compatibility using Google Gemini and Retrieval-Augmented Generation.</i></p>
+  <p><i>A full-stack AI-powered platform that generates personalized cold emails, crafts tailored resumes, and predicts ATS compatibility — powered by Google Gemini (cloud) and a local Gemma model via Ollama, with Retrieval-Augmented Generation.</i></p>
   
   <br/>
   
@@ -74,7 +75,8 @@ graph TB
             style AI fill:#FAF5FF,stroke:#E9D5FF,stroke-width:2
             AIService["⚡ AIService"]
             Prompts["📜 Prompt Templates"]
-            Gemini["🌐 Google Gemini"]
+            Ollama["🦙 Ollama (Gemma local)"]
+            Gemini["🌐 Google Gemini (cloud)"]
             RAG["📚 FAISS + Embeddings"]
         end
         
@@ -84,6 +86,7 @@ graph TB
 
     subgraph External["🌍 External"]
         style External fill:#FFF7ED,stroke:#FED7AA,stroke-width:2
+        OLL["Ollama Server"]
         GAPI["Google AI API"]
     end
 
@@ -96,6 +99,7 @@ graph TB
     Resumes --> AIService --> DB
     Docs --> FS --> DB
     AIService --> Prompts --> Gemini --> GAPI
+    AIService --> Prompts --> Ollama --> OLL
     AIService --> RAG
 ```
 
@@ -278,6 +282,77 @@ sequenceDiagram
 
 <br/>
 
+### 📧 JD → Cold Email Flow
+
+<div align="center">
+
+```mermaid
+sequenceDiagram
+    actor U as 👤 User
+    participant F as 🖥 Frontend
+    participant BE as ⚙️ API
+    participant AI as 🧠 AIService
+    participant LLM as 🦙 Ollama / Gemini
+    participant DB as 💾 Database
+
+    U->>F: Upload JD file OR paste JD text
+    F->>BE: POST /api/emails/from-jd (multipart)
+    BE->>BE: 📖 Load text via PyPDFLoader / Docx2txtLoader / TextLoader
+    BE->>AI: generate_email_from_jd(jd, candidate_name)
+    AI->>AI: Format JD_COLD_EMAIL_PROMPT<br/>(no placeholders, &lt;180 words)
+    AI->>LLM: 🔮 Invoke with JD
+    LLM-->>AI: ✉️ Raw email (Subject + Body)
+    AI->>AI: ⚡ clean_placeholders()<br/>+ _extract_email_parts()
+    AI-->>BE: {subject, body}
+    BE->>DB: 💾 Auto-save under project<br/>(or create "My Campaigns")
+    DB-->>BE: ✅ Saved
+    BE-->>F: 200 {id, subject, body, saved}
+    F-->>U: 🎉 Copy / Print / Open in Gmail
+```
+
+</div>
+
+<br/>
+
+### 🧑‍💼 Resume Builder Flow
+
+<div align="center">
+
+```mermaid
+sequenceDiagram
+    actor U as 👤 User
+    participant F as 🖥 Frontend
+    participant BE as ⚙️ API
+    participant AI as 🧠 AIService
+    participant LLM as 🦙 Ollama / Gemini
+
+    U->>F: Paste resume text or upload PDF/DOCX
+    F->>BE: POST /api/resumes/extract-text (optional)
+    BE-->>F: {text}
+    F->>BE: POST /api/resumes/parse
+    BE->>AI: parse_resume_info(resume_text)
+    AI->>AI: Format RESUME_PARSE_PROMPT
+    AI->>LLM: 🔮 Extract name / contact / location / education / skills
+    LLM-->>AI: 📦 JSON
+    AI->>AI: ⚡ Parse JSON (markdown-code-block tolerant)
+    AI-->>BE: {name, contact, location, education, skills}
+    BE-->>F: 200 Structured profile
+    U->>F: ✏️ Review / edit skills
+    U->>F: Paste Job Description
+    F->>BE: POST /api/resumes/build
+    BE->>AI: build_ats_resume(parsed_info, jd)
+    AI->>AI: Format ATS_RESUME_BUILD_PROMPT
+    AI->>LLM: 🔮 Generate ATS-optimized Markdown resume
+    LLM-->>AI: 📝 Resume Markdown
+    AI-->>BE: resume_markdown
+    BE-->>F: 200 {resume_markdown}
+    F-->>U: 🎯 Preview (react-markdown) / Download PDF
+```
+
+</div>
+
+<br/>
+
 ### 🧠 Prompt Selection Flow
 
 <div align="center">
@@ -288,36 +363,67 @@ flowchart TD
     
     ENDPOINT -->|POST /api/emails/quick| QE[📨 Quick Email]
     QE --> QP[QUICK_EMAIL_PROMPT]
-    QP --> QLLM[Gemini - local_llm]
+    QP --> QLLM[local_llm]
     QLLM --> QR[📝 Plain text email]
+    
+    ENDPOINT -->|POST /api/emails/from-jd| JD[📧 JD Cold Email]
+    JD --> JDP[JD_COLD_EMAIL_PROMPT]
+    JDP --> JDLLM[local_llm]
+    JDLLM --> JDCLEAN[⚡ clean_placeholders]
+    JDCLEAN --> JDSAVE[💾 Save email]
+    
+    ENDPOINT -->|POST /api/emails/text-prompt| TP[✍️ Text Prompt Email]
+    TP --> TPP[TEXT_PROMPT_EMAIL_PROMPT]
+    TPP --> TPLLM[local_llm]
+    TPLLM --> TPSAVE[💾 Save email]
+    
+    ENDPOINT -->|POST /api/emails/from-context| CE2[📋 Context Email]
+    CE2 --> CEP[CONTEXT_COLD_EMAIL_PROMPT]
+    CEP --> CELLM[local_llm]
+    CELLM --> CESAVE[💾 Save email]
     
     ENDPOINT -->|POST /api/emails/generate| CE[📧 Cold Email]
     CE --> CP[COLD_EMAIL_PROMPT]
     CP --> RAG1[RAG retrieve company context]
-    RAG1 --> CLLM[Gemini - local_llm]
+    RAG1 --> CLLM[local_llm]
     CLLM --> PARSE[Parse subject / body]
     PARSE --> RESUME
     
     RESUME[Also generate resume] --> RP[RESUME_INJECTION_PROMPT]
     RP --> RAG2[RAG retrieve base resume]
-    RAG2 --> RLLM[Gemini - llm]
+    RAG2 --> RLLM[local_llm]
     RLLM --> SAVE[💾 Save email + resume]
     
     ENDPOINT -->|POST /api/resumes/generate| RG[📄 Resume Gen]
     RG --> RGP[RESUME_INJECTION_PROMPT]
     RGP --> RGRAG[RAG retrieve base resume]
-    RGRAG --> RGLLM[Gemini - llm]
+    RGRAG --> RGLLM[local_llm]
     RGLLM --> RGSAVE[💾 Save resume]
+    
+    ENDPOINT -->|POST /api/resumes/parse| RPARSE[🧩 Parse Resume]
+    RPARSE --> RPARSEP[RESUME_PARSE_PROMPT]
+    RPARSEP --> RPARSELLM[local_llm]
+    RPARSELLM --> RPARSEJ[Parse JSON]
+    
+    ENDPOINT -->|POST /api/resumes/build| RBUILD[🛠 ATS Resume]
+    RBUILD --> RBUILDP[ATS_RESUME_BUILD_PROMPT]
+    RBUILDP --> RBUILDLLM[local_llm]
+    RBUILDLLM --> RBUILDMD[📝 Markdown resume]
     
     ENDPOINT -->|POST /api/resumes/*/ats-score| ATS[📊 ATS Score]
     ATS --> AP[ATS_ANALYSIS_PROMPT]
-    AP --> ALLM[Gemini - llm]
+    AP --> ALLM[gemini - llm]
     ALLM --> AJ[Parse JSON response]
     AJ --> AUPDATE[💾 Update DB + return]
     
     style QE fill:#E0F2FE,stroke:#0284C7
+    style JD fill:#E0F2FE,stroke:#0284C7
+    style TP fill:#E0F2FE,stroke:#0284C7
+    style CE2 fill:#E0F2FE,stroke:#0284C7
     style CE fill:#DCFCE7,stroke:#16A34A
     style RG fill:#FEF3C7,stroke:#D97706
+    style RPARSE fill:#FEF3C7,stroke:#D97706
+    style RBUILD fill:#FEF3C7,stroke:#D97706
     style ATS fill:#F3E8FF,stroke:#9333EA
 ```
 
@@ -349,7 +455,7 @@ flowchart TD
 | `created_at` | `DateTime` | 📅 Server default | |
 | `updated_at` | `DateTime` | 🔄 On update | |
 
-**Relationships:** `projects`, `emails`, `documents`, `companies`, `applications`, `templates`, `resumes`, `notifications`
+**Relationships:** `projects`, `emails`, `documents`, `companies`, `applications`, `templates`, `resumes`, `notifications`, `reminders`
 
 <br/>
 
@@ -487,6 +593,23 @@ flowchart TD
 
 <br/>
 
+### ⏰ Reminder — `reminders`
+
+| Column | Type | Constraints | Description |
+|--------|------|-------------|-------------|
+| `id` | `Integer` | 🔑 PK, Auto | |
+| `title` | `String` | 🏷 NOT NULL | Follow-up title |
+| `description` | `Text` | ➖ Nullable | |
+| `due_date` | `DateTime` | 🗓 NOT NULL | Due timestamp |
+| `is_completed` | `Boolean` | ✅ Default: `False` | |
+| `user_id` | `Integer` | 🔗 FK → `users.id` | 🔷 NOT NULL |
+| `application_id` | `Integer` | 🔗 FK → `applications.id` | ➖ Nullable |
+| `created_at` | `DateTime` | 📅 Server default | |
+
+**Relationships:** `user`, `application`
+
+<br/>
+
 ---
 
 ## 🌐 API Reference
@@ -521,6 +644,9 @@ flowchart TD
 | Method | Path | Auth | Request | Response | Description |
 |--------|------|:----:|---------|:--------:|-------------|
 | <kbd>POST</kbd> | `/api/emails/quick` | ✅ | `QuickEmailRequest` | `QuickEmailResponse` 🟢 200 | Quick by role only |
+| <kbd>POST</kbd> | `/api/emails/from-jd` | ✅ | Multipart (file/text) | `JDEmailResponse` 🟢 200 | JD file/paste → email (auto-saved) |
+| <kbd>POST</kbd> | `/api/emails/text-prompt` | ✅ | `TextPromptRequest` | `TextPromptResponse` 🟢 200 | Free-text prompt → email |
+| <kbd>POST</kbd> | `/api/emails/from-context` | ✅ | `ContextEmailRequest` | `ContextEmailResponse` 🟢 200 | Prompt + tone → email |
 | <kbd>POST</kbd> | `/api/emails/generate` | ✅ | `EmailGenerateRequest` | `EmailOut` 🟢 201 | Full gen + RAG + auto-resume |
 | <kbd>GET</kbd> | `/api/emails/project/{id}` | ✅ | — | `List[EmailOut]` 🟢 200 | List project emails |
 | <kbd>GET</kbd> | `/api/emails/{id}` | ✅ | — | `EmailOut` 🟢 200 | Get one |
@@ -541,6 +667,9 @@ flowchart TD
 | <kbd>DELETE</kbd> | `/api/resumes/{id}` | ✅ | — | 🔴 204 | Delete |
 | <kbd>POST</kbd> | `/api/resumes/ats-score` | ✅ | `ATSAnalysisRequest` | `ATSAnalysisResponse` 🟢 200 | Analyze any resume+JD |
 | <kbd>POST</kbd> | `/api/resumes/{id}/ats-score` | ✅ | — | `ATSAnalysisResponse` 🟢 200 | Analyze + auto-save score |
+| <kbd>POST</kbd> | `/api/resumes/parse` | ✅ | `ResumeParseRequest` | `ResumeParseResponse` 🟢 200 | Extract structured profile (name/contact/location/education/skills) |
+| <kbd>POST</kbd> | `/api/resumes/build` | ✅ | `ATSResumeGenerateRequest` | `ATSResumeGenerateResponse` 🟢 200 | Build ATS-optimized resume (Markdown) |
+| <kbd>POST</kbd> | `/api/resumes/extract-text` | ✅ | File (PDF/DOCX) | `{text}` 🟢 200 | Extract raw text from file |
 
 <br/>
 
@@ -769,6 +898,226 @@ Subject: [Your Subject Line]
 
 <br/>
 
+<details open>
+<summary><b>📧 5. JD_COLD_EMAIL_PROMPT</b> — <i>Cold email straight from a Job Description</i></summary>
+
+<br/>
+
+**Used in:** `POST /api/emails/from-jd`  
+**Input variables:** `{job_description}`, `{candidate_name}`  
+**LLM:** `local_llm` (Ollama/Gemma, falls back to Gemini)
+
+```
+You are an expert career coach and cold email copywriter who writes high-converting, crisp cold emails for job applications.
+
+Read the Job Description below carefully and extract:
+- The role title and company (if mentioned)
+- The key skills, technologies, and requirements
+- The responsibilities
+
+Job Description:
+{job_description}
+
+CRITICAL RULES:
+1. You MUST NOT use any placeholders or bracket placeholders like [Name], [Company], [Number], [Your Name], [Previous Company], [Percentage], <X>, etc.
+2. The candidate's name is "{candidate_name}". Sign the email with this exact name.
+3. If a hiring manager name is not given in the JD, open with "Dear Hiring Manager".
+4. Never invent fake metrics or employers. Use confident, generic but specific-sounding phrasing.
+5. Do NOT include words like "placeholder", "X years", or ask the reader to fill anything in.
+
+Write a single, crisp, professional cold email (under 180 words) that references the role, highlights 3-4 matching skills, shows enthusiasm, and ends with a low-friction CTA.
+
+Output Format (strictly, with no brackets anywhere):
+Subject: <A concise, attention-grabbing subject line>
+
+<Email body with short paragraphs and a clear sign-off.>
+```
+
+<br/>
+
+| Tag | Why It's Used |
+|-----|---------------|
+| `{job_description}` | **The only real input.** The AI extracts role, company, and key requirements itself. |
+| `{candidate_name}` | **Signature.** The email is signed with the logged-in user's name. |
+
+**Why a dedicated JD prompt?** Powers the "JD Email Generator" — a two-step wizard where the user uploads/pastes a JD and gets a ready-to-send email. Output is post-processed by `clean_placeholders()` (strips `[...]`, `<...>`, `{...}`, markdown markers) and `_extract_email_parts()` (splits `Subject:` from body) before being auto-saved.
+
+</details>
+
+<br/>
+
+<details open>
+<summary><b>⚡ 6. TEXT_PROMPT_EMAIL_PROMPT</b> — <i>Short email from a free-text prompt</i></summary>
+
+<br/>
+
+**Used in:** `POST /api/emails/text-prompt`  
+**Input variables:** `{prompt}`, `{candidate_name}`  
+**LLM:** `local_llm` (Ollama/Gemma)
+
+```
+You are an expert career coach and cold email copywriter who writes short, sweet, high-converting cold emails for job applications.
+
+The user has shared what they want the email about:
+{prompt}
+
+CRITICAL RULES:
+1. You MUST NOT use any placeholders or bracket placeholders like [Name], [Company], [Role], [Number], <X>, etc.
+2. The candidate's name is "{candidate_name}". Sign the email with this exact name.
+3. If no hiring manager name is mentioned, open with "Dear Hiring Manager".
+4. Never invent fake metrics, credentials, or employers.
+5. Do NOT include words like "placeholder", "X years", or ask the reader to fill anything in.
+
+Write a single, short, sweet, professional cold email (under 120 words) that opens with a strong personalized line, highlights relevant skills, and ends with a clear low-friction call to action.
+
+Output Format (strictly, with no brackets anywhere):
+Subject: A concise, attention-grabbing subject line
+
+Email body with short paragraphs and a clear sign-off.
+```
+
+<br/>
+
+| Tag | Why It's Used |
+|-----|---------------|
+| `{prompt}` | **User intent.** Whatever the user typed becomes the email's subject matter. |
+| `{candidate_name}` | **Signature.** Signs the email so it reads as first-person. |
+
+**Why a separate prompt?** Fast, form-free email generation. It enforces a 120-word cap, bans placeholders, and avoids inventing fake metrics — so every output is sendable as-is.
+
+</details>
+
+<br/>
+
+<details open>
+<summary><b>💬 7. CONTEXT_COLD_EMAIL_PROMPT</b> — <i>Prompt + tone email</i></summary>
+
+<br/>
+
+**Used in:** `POST /api/emails/from-context`  
+**Input variables:** `{user_prompt}`, `{candidate_name}`, `{tone}`  
+**LLM:** `local_llm` (Ollama/Gemma)
+
+```
+You are an expert career coach and cold email copywriter who specializes in writing high-converting, polished cold emails.
+
+The user has provided the following context/instructions for the cold email they want:
+"{user_prompt}"
+
+The candidate's name is: {candidate_name}
+Desired tone: {tone}
+
+CRITICAL RULES:
+1. You MUST NOT use any placeholders or bracket placeholders like [Name], [Company], [Number], [Your Name], <X>, etc.
+2. Parse the user's context carefully to extract the role, company name, and any specific details.
+3. Sign the email with the candidate's exact name.
+4. If a hiring manager name is not provided, open with "Dear Hiring Manager".
+5. Never invent fake metrics or employers.
+6. Match the desired tone: {tone}
+
+Write a single, polished, professional cold email (150-250 words) that opens with a strong personalized first line, highlights 3-4 relevant skills, shows enthusiasm, and ends with a clear low-friction call to action.
+
+Output Format (strictly, with no brackets anywhere):
+Subject: <A concise, attention-grabbing subject line>
+
+<Email body with short paragraphs and a clear sign-off.>
+```
+
+<br/>
+
+| Tag | Why It's Used |
+|-----|---------------|
+| `{user_prompt}` | **The blueprint.** The user describes role, company, and any specifics in plain English. |
+| `{candidate_name}` | **Signature.** Personalizes the sign-off. |
+| `{tone}` | **Style control.** Professional, Friendly, Confident, Enthusiastic, Formal, Casual — mapped from the frontend dropdown. |
+
+**Why separate from JD prompt?** This powers the "Cold Email Generator" page with example prompts, auto-suggest, and a tone picker. It parses free-form context instead of a structured JD.
+
+</details>
+
+<br/>
+
+<details open>
+<summary><b>🧩 8. RESUME_PARSE_PROMPT</b> — <i>Extract structured data from a resume</i></summary>
+
+<br/>
+
+**Used in:** `POST /api/resumes/parse`  
+**Input variables:** `{resume_content}`  
+**LLM:** `local_llm` (Ollama/Gemma)
+
+```
+You are an expert ATS parser. Your task is to extract the following information from the provided resume text:
+- Name
+- Email (or contact number if email missing)
+- Location
+- Education (as a single concise string or bullet list)
+- Skills (as a list of strings)
+
+Resume Text:
+{resume_content}
+
+Return the extracted information ONLY as a valid JSON object with the following exact keys:
+{
+  "name": "...",
+  "contact": "...",
+  "location": "...",
+  "education": "...",
+  "skills": ["...", "..."]
+}
+
+Do not include any markdown formatting like ```json or any other text. Just the JSON object.
+```
+
+<br/>
+
+**Why JSON?** The frontend Resume Builder needs discrete fields (name, contact, location, education, skills) to render a reviewable, editable profile. The backend strips markdown code-block wrappers via regex before `json.loads()`; on failure it returns sensible defaults.
+
+</details>
+
+<br/>
+
+<details open>
+<summary><b>🛠 9. ATS_RESUME_BUILD_PROMPT</b> — <i>Generate an ATS-optimized resume</i></summary>
+
+<br/>
+
+**Used in:** `POST /api/resumes/build`  
+**Input variables:** `{parsed_info}`, `{job_description}`  
+**LLM:** `local_llm` (Ollama/Gemma)
+
+```
+You are an expert Resume Writer and ATS optimization specialist.
+Your task is to generate a polished, professional, ATS-optimized resume using the provided Candidate Information, tailored specifically to the Job Description below.
+
+Job Description:
+{job_description}
+
+Candidate Information (JSON format):
+{parsed_info}
+
+Instructions:
+1. Output the final resume in formatted Markdown.
+2. Ensure 100% ATS compatibility by strategically naturally incorporating keywords from the Job Description.
+3. Frame existing skills as actionable experience — do NOT lie.
+4. Do not include placeholders or brackets.
+5. Use H1 for Name, H3 for Contact Info, H2 for Sections.
+6. Do NOT wrap the output in markdown code blocks.
+```
+
+<br/>
+
+| Tag | Why It's Used |
+|-----|---------------|
+| `{parsed_info}` | **Candidate profile.** The structured data extracted by `RESUME_PARSE_PROMPT` (plus any edits). |
+| `{job_description}` | **The target.** Keywords are naturally woven in for ATS keyword matching. |
+
+**Why Markdown?** Renders in the frontend via `react-markdown`, exports to PDF with `html2pdf.js`, and stays plain-text readable for ATS parsers.
+
+</details>
+
+<br/>
+
 ---
 
 ## ⚙️ Setup
@@ -779,7 +1128,22 @@ Subject: [Your Subject Line]
 
 - Python **3.11+**
 - Node.js **20+**
-- Google Gemini API key ([get one free](https://aistudio.google.com/))
+- [Ollama](https://ollama.com/) with the **Gemma 2 (2B)** model *(default local LLM)*
+- Google Gemini API key ([get one free](https://aistudio.google.com/)) *(optional cloud fallback)*
+
+<br/>
+
+### 0. Ollama Setup (recommended)
+
+The default LLM provider is a **local Gemma model** — free, private, and offline.
+
+```bash
+# Install Ollama, then pull the default model:
+ollama pull gemma2:2b
+```
+
+- Ollama must be running at `http://localhost:11434` for local generation.
+- Set `LLM_PROVIDER=gemini` in `backend/.env` to switch back to Google Gemini (requires `GEMINI_API_KEY`).
 
 <br/>
 
@@ -791,13 +1155,22 @@ cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env
 ```
 
-Edit **`backend/.env`** — you must set `GEMINI_API_KEY`:
+Edit **`backend/.env`** — set `LLM_PROVIDER` (default `ollama`) and, if using Gemini, `GEMINI_API_KEY`:
 
 ```ini
 DATABASE_URL=sqlite:///./ai_cold_email.db       # or PostgreSQL
 JWT_SECRET=your-random-secret-here
 JWT_REFRESH_SECRET=your-random-refresh-secret
-GEMINI_API_KEY=AIzaSy...                         # Required
+
+# LLM provider: "ollama" (local Gemma) or "gemini" (cloud)
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=gemma2:2b
+OLLAMA_TEMPERATURE=0.7
+OLLAMA_NUM_CTX=8192
+
+GEMINI_API_KEY=AIzaSy...                         # Required if LLM_PROVIDER=gemini
+GEMINI_MODEL=gemini-2.5-flash
 ```
 
 <br/>
@@ -820,7 +1193,7 @@ uvicorn app.main:app --reload    # http://localhost:8000
 ```bash
 cd frontend
 npm install
-npm run dev                      # http://localhost:5173
+npm run dev                      # http://localhost:3000
 ```
 
 <br/>
@@ -858,24 +1231,30 @@ pytest tests/test_api_endpoints.py -v
  ┃   ┃   ┗━ 📂 versions ───────── 📜 Migration scripts
  ┃   ┣━ 📂 app
  ┃   ┃   ┣━ 📂 ai
- ┃   ┃   ┃   ┣━ 📄 gemini_client.py ─── 🤖 LLM init
+ ┃   ┃   ┃   ┣━ 📄 gemini_client.py ─── 🤖 Gemini cloud LLM
+ ┃   ┃   ┃   ┣━ 📄 ollama_client.py ─── 🦙 Local Gemma LLM (default)
  ┃   ┃   ┃   ┣━ 📂 prompts
- ┃   ┃   ┃   ┃   ┗━ 📄 email_prompts.py ─ 📜 4 prompt templates
+ ┃   ┃   ┃   ┃   ┣━ 📄 email_prompts.py ─────── 📜 7 email prompt templates
+ ┃   ┃   ┃   ┃   ┗━ 📄 resume_builder_prompts.py ─ 🧩 Parse + ATS-build prompts
  ┃   ┃   ┃   ┗━ 📂 rag
  ┃   ┃   ┃       ┗━ 📄 engine.py ──────── 📚 FAISS + embeddings
  ┃   ┃   ┣━ 📂 api
- ┃   ┃   ┃   ┣━ 📄 emails.py ─────────── ✉️ Email gen + CRUD
- ┃   ┃   ┃   ┣━ 📄 resumes.py ────────── 📄 Resume gen + ATS
+ ┃   ┃   ┃   ┣━ 📄 emails.py ─────────── ✉️ Email gen (quick / jd / prompt / context)
+ ┃   ┃   ┃   ┣━ 📄 resumes.py ────────── 📄 Resume gen + ATS + parse + build
  ┃   ┃   ┃   ┣━ 📄 projects.py ───────── 📁 Project CRUD
  ┃   ┃   ┃   ┣━ 📄 documents.py ──────── 📎 Upload + RAG index
  ┃   ┃   ┃   ┗━ 📄 activities.py ─────── 📈 Activity log
  ┃   ┃   ┣━ 📂 auth
  ┃   ┃   ┃   ┣━ 📄 jwt.py ────────────── 🔑 JWT + bcrypt
  ┃   ┃   ┃   ┗━ 📄 router.py ─────────── 🔐 Register/Login/Me
- ┃   ┃   ┣━ 📂 models ─────────────── 🗄 SQLAlchemy (10 models)
+ ┃   ┃   ┣━ 📂 middleware
+ ┃   ┃   ┃   ┗━ 📄 error_handler.py ──── 🛡 Global error handlers
+ ┃   ┃   ┣━ 📂 models ─────────────── 🗄 SQLAlchemy (11 models)
  ┃   ┃   ┣━ 📂 schemas ────────────── 📋 Pydantic (request/response)
  ┃   ┃   ┣━ 📂 services
  ┃   ┃   ┃   ┗━ 📄 ai_service.py ─────── ⚡ AI orchestrator
+ ┃   ┃   ┣━ 📄 config.py ─────────────── ⚙️ Pydantic settings (.env)
+ ┃   ┃   ┣━ 📄 limiter.py ────────────── 🚦 Rate limiting (slowapi)
  ┃   ┃   ┣━ 📄 main.py ──────────────── 🚀 FastAPI entry
  ┃   ┃   ┗━ 📄 database.py ──────────── 💾 SQLAlchemy engine
  ┃   ┣━ 📂 faiss_index ─────────── 🔍 Per-project vector indices
@@ -887,17 +1266,35 @@ pytest tests/test_api_endpoints.py -v
  ┣━ 📂 <b>frontend</b>
  ┃   ┣━ 📂 src
  ┃   ┃   ┣━ 📂 components
+ ┃   ┃   ┃   ┣━ 📄 ColdEmailGenerator.tsx ── 📧 JD → email wizard
  ┃   ┃   ┃   ┣━ 📄 ErrorBoundary.tsx
+ ┃   ┃   ┃   ┣━ 📄 ThemeToggle.tsx ──────── 🌓 Light/dark switch
  ┃   ┃   ┃   ┗━ 📂 layout
  ┃   ┃   ┃       ┗━ 📄 AppLayout.tsx ─── 🧭 Sidebar + header + guard
+ ┃   ┃   ┣━ 📂 data
+ ┃   ┃   ┃   ┗━ 📄 resumeTemplates.ts ──── 📄 ATS-friendly resume templates
  ┃   ┃   ┣━ 📂 lib
  ┃   ┃   ┃   ┗━ 📄 api.ts ────────────── 🔗 Axios + interceptors
- ┃   ┃   ┣━ 📂 pages ─────────────── 🖥 15 page components
- ┃   ┃   ┃   ┣━ 📄 Dashboard.tsx
- ┃   ┃   ┃   ┣━ 📄 Resumes.tsx
- ┃   ┃   ┃   ┣━ 📄 Companies.tsx
- ┃   ┃   ┃   ┣━ 📄 ProjectDetail.tsx
- ┃   ┃   ┃   ┗━ ... (11 more)
+ ┃   ┃   ┣━ 📂 pages ─────────────── 🖥 19 page components
+ ┃   ┃   ┃   ┣━ 📄 Dashboard.tsx ──────── 🏠 Overview + stats
+ ┃   ┃   ┃   ┣━ 📄 EmailGenerator.tsx ─── 📧 JD Email Generator
+ ┃   ┃   ┃   ┣━ 📄 ColdEmailPrompt.tsx ── ✨ Prompt + tone email
+ ┃   ┃   ┃   ┣━ 📄 ResumeBuilder.tsx ─── 🧑‍💼 Parse → build ATS resume
+ ┃   ┃   ┃   ┣━ 📄 Applications.tsx ───── 🎯 Job application tracker
+ ┃   ┃   ┃   ┣━ 📄 Companies.tsx ──────── 🏢 Company CRM
+ ┃   ┃   ┃   ┣━ 📄 Resumes.tsx ────────── 📄 Saved resumes + ATS scores
+ ┃   ┃   ┃   ┣━ 📄 Templates.tsx ──────── 📝 Email templates
+ ┃   ┃   ┃   ┣━ 📄 KnowledgeBase.tsx ──── 📚 Documents + RAG
+ ┃   ┃   ┃   ┣━ 📄 History.tsx ────────── 🕘 Generation history
+ ┃   ┃   ┃   ┣━ 📄 Analytics.tsx ──────── 📊 Charts + insights
+ ┃   ┃   ┃   ┣━ 📄 NotificationsPage.tsx ─ 🔔 Notifications
+ ┃   ┃   ┃   ┣━ 📄 CalendarPage.tsx ───── 📅 Interview calendar
+ ┃   ┃   ┃   ┣━ 📄 Settings.tsx ───────── ⚙️ Profile settings
+ ┃   ┃   ┃   ┣━ 📄 ProjectDetail.tsx ──── 📁 Project detail
+ ┃   ┃   ┃   ┣━ 📄 NewProject.tsx ─────── 🆕 Create campaign
+ ┃   ┃   ┃   ┣━ 📄 Landing.tsx ────────── 🚀 Marketing landing
+ ┃   ┃   ┃   ┣━ 📄 Login.tsx / Register.tsx ─ 🔐 Auth
+ ┃   ┃   ┃   ┗━ ... 
  ┃   ┃   ┣━ 📂 store
  ┃   ┃   ┃   ┣━ 📄 useAuthStore.ts ───── 👤 Auth state
  ┃   ┃   ┃   ┗━ 📄 useThemeStore.ts ──── 🌓 Theme state
@@ -905,11 +1302,13 @@ pytest tests/test_api_endpoints.py -v
  ┃   ┃   ┗━ 📄 main.tsx ─────────────── 🎯 Entry point
  ┃   ┣━ 📄 package.json
  ┃   ┣━ 📄 vite.config.ts
- ┃   ┗━ 📄 tailwind.config.js
+ ┃   ┣━ 📄 tailwind.config.js
+ ┃   ┣━ 📄 components.json ─────────── 🎨 shadcn/ui config
+ ┃   ┗━ 📄 .oxlintrc.json ──────────── 🔬 Lint config
  ┃
  ┣━ 📂 Doc ───────────────────────── 📊 Architecture diagrams + PPT
- ┣━ 📄 run.bat ───────────────────── 🏁 Windows launch
- ┣━ 📄 run.ps1 ───────────────────── 🏁 PowerShell launch
+ ┣━ 📄 run.bat ───────────────────── 🏁 Windows launch (checks Ollama)
+ ┣━ 📄 run.ps1 ───────────────────── 🏁 PowerShell launch (checks Ollama)
  ┗━ 📄 README.md ─────────────────── 📘 This file
 </pre>
 
@@ -931,6 +1330,7 @@ pytest tests/test_api_endpoints.py -v
     <img src="https://img.shields.io/badge/Made%20with-FastAPI-009688?logo=fastapi" alt="FastAPI"/>
     <img src="https://img.shields.io/badge/Made%20with-Python-3776AB?logo=python" alt="Python"/>
     <img src="https://img.shields.io/badge/Powered%20by-Gemini-8E75B2?logo=google" alt="Gemini"/>
+    <img src="https://img.shields.io/badge/Runs%20on-Ollama-000000?logo=ollama" alt="Ollama"/>
   </p>
   <br/>
   <p><b>ColdForge</b> — © 2026</p>

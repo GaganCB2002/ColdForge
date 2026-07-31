@@ -1,9 +1,9 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuthStore } from '../store/useAuthStore';
-import { useThemeStore } from '../store/useThemeStore';
+import ThemeToggle from '../components/ThemeToggle';
 import api from '../lib/api';
-import { Sun, Moon, Sparkles, Mail, Lock, User, Loader2 } from 'lucide-react';
+import { Sparkles, Mail, Lock, User, Loader2 } from 'lucide-react';
 
 export default function Register() {
   const [email, setEmail] = useState('');
@@ -14,7 +14,6 @@ export default function Register() {
   const navigate = useNavigate();
   const login = useAuthStore((state) => state.login);
   const fetchUser = useAuthStore((state) => state.fetchUser);
-  const { theme, toggleTheme } = useThemeStore();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -40,13 +39,9 @@ export default function Register() {
 
   return (
     <main className="min-h-screen bg-[#F7FAFD] dark:bg-background flex items-center justify-center p-4 font-sans relative">
-      <button
-        onClick={toggleTheme}
-        className="absolute top-6 right-6 p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-white/80 dark:hover:bg-muted transition-colors"
-        aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-      >
-        {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-      </button>
+      <div className="absolute top-6 right-6">
+        <ThemeToggle />
+      </div>
       <div className="w-full max-w-sm">
         <div className="text-center mb-8">
           <div className="inline-flex items-center gap-2.5 mb-6">

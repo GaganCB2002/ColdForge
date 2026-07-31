@@ -1,0 +1,867 @@
+Warning: You are sending unauthenticated requests to the HF Hub. Please set a HF_TOKEN to enable higher rate limits and faster downloads.
+Loading weights:   0%|          | 0/199 [00:00<?, ?it/s]Loading weights: 100%|██████████| 199/199 [00:00<00:00, 9053.17it/s]
+INFO:     Started server process [26360]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8000 (Press CTRL+C to quit)
+INFO:     127.0.0.1:55638 - "GET /health HTTP/1.1" 200 OK
+2026-07-31 14:29:41,403 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'string_too_short', 'loc': ('body', 'password'), 'msg': 'String should have at least 6 characters', 'input': '123', 'ctx': {'min_length': 6}}
+
+  File "D:\AI Cold Email Generator\backend\app\auth\router.py", line 17, in register
+    POST /api/auth/register
+D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py:59: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+  response = await handler(conn, exc)  # type: ignore[arg-type]
+INFO:     127.0.0.1:55659 - "POST /api/auth/register HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:55659 - "POST /api/auth/login HTTP/1.1" 200 OK
+2026-07-31 14:29:41,657 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'string_too_short', 'loc': ('body', 'role'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\emails.py", line 146, in quick_generate_email
+    POST /api/emails/quick
+INFO:     127.0.0.1:55659 - "POST /api/emails/quick HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:29:41,660 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'value_error', 'loc': ('body', 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 20, in create_project
+    POST /api/projects/
+INFO:     127.0.0.1:55659 - "POST /api/projects/ HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:29:41,662 - app.middleware.error_handler - WARNING - Validation error: 2 validation errors:
+  {'type': 'string_too_short', 'loc': ('body', 'action_type'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}
+  {'type': 'string_too_short', 'loc': ('body', 'description'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\activities.py", line 18, in create_activity
+    POST /api/activities
+INFO:     127.0.0.1:55659 - "POST /api/activities HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:55659 - "POST /api/projects/ HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55659 - "DELETE /api/projects/10 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55659 - "POST /api/activities HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55659 - "DELETE /api/activities/1 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55685 - "GET /api/projects/ HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55685 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55685 - "GET /api/emails/project/1 HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55685 - "GET /api/resumes/ HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55685 - "GET /api/activities HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55685 - "GET /api/auth/me HTTP/1.1" 401 Unauthorized
+INFO:     127.0.0.1:55685 - "POST /api/auth/login HTTP/1.1" 400 Bad Request
+2026-07-31 14:30:04,456 - app.middleware.error_handler - WARNING - Validation error: 2 validation errors:
+  {'type': 'missing', 'loc': ('body', 'username'), 'msg': 'Field required', 'input': None}
+  {'type': 'missing', 'loc': ('body', 'password'), 'msg': 'Field required', 'input': None}
+
+  File "D:\AI Cold Email Generator\backend\app\auth\router.py", line 37, in login
+    POST /api/auth/login
+INFO:     127.0.0.1:55685 - "POST /api/auth/login HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:55685 - "POST /api/auth/register HTTP/1.1" 400 Bad Request
+2026-07-31 14:30:04,460 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'value_error', 'loc': ('body', 'email'), 'msg': 'value is not a valid email address: An email address must have an @-sign.', 'input': 'not-an-email', 'ctx': {'reason': 'An email address must have an @-sign.'}}
+
+  File "D:\AI Cold Email Generator\backend\app\auth\router.py", line 17, in register
+    POST /api/auth/register
+INFO:     127.0.0.1:55685 - "POST /api/auth/register HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:04,461 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'string_too_short', 'loc': ('body', 'password'), 'msg': 'String should have at least 6 characters', 'input': '123', 'ctx': {'min_length': 6}}
+
+  File "D:\AI Cold Email Generator\backend\app\auth\router.py", line 17, in register
+    POST /api/auth/register
+INFO:     127.0.0.1:55685 - "POST /api/auth/register HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:55685 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "GET /api/auth/me HTTP/1.1" 200 OK
+2026-07-31 14:30:04,656 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'string_too_long', 'loc': ('body', 'name'), 'msg': 'String should have at most 200 characters', 'input': 'AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA', 'ctx': {'max_length': 200}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 20, in create_project
+    POST /api/projects/
+INFO:     127.0.0.1:55685 - "POST /api/projects/ HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:04,658 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'missing', 'loc': ('body', 'name'), 'msg': 'Field required', 'input': {}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 20, in create_project
+    POST /api/projects/
+INFO:     127.0.0.1:55685 - "POST /api/projects/ HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:04,660 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'string_type', 'loc': ('body', 'name'), 'msg': 'Input should be a valid string', 'input': 123}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 20, in create_project
+    POST /api/projects/
+INFO:     127.0.0.1:55685 - "POST /api/projects/ HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:05,826 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55685 - "POST /api/emails/from-jd HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "POST /api/emails/from-jd HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:55685 - "POST /api/emails/from-jd HTTP/1.1" 400 Bad Request
+2026-07-31 14:30:08,663 - app.middleware.error_handler - WARNING - Validation error: 5 validation errors:
+  {'type': 'missing', 'loc': ('body', 'recipient_name'), 'msg': 'Field required', 'input': {'project_id': 99999}}
+  {'type': 'missing', 'loc': ('body', 'company_name'), 'msg': 'Field required', 'input': {'project_id': 99999}}
+  {'type': 'missing', 'loc': ('body', 'industry'), 'msg': 'Field required', 'input': {'project_id': 99999}}
+  {'type': 'missing', 'loc': ('body', 'pain_points'), 'msg': 'Field required', 'input': {'project_id': 99999}}
+  {'type': 'missing', 'loc': ('body', 'job_description'), 'msg': 'Field required', 'input': {'project_id': 99999}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\emails.py", line 157, in generate_email
+    POST /api/emails/generate
+D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py:59: StarletteDeprecationWarning: 'HTTP_422_UNPROCESSABLE_ENTITY' is deprecated. Use 'HTTP_422_UNPROCESSABLE_CONTENT' instead.
+  response = await handler(conn, exc)  # type: ignore[arg-type]
+INFO:     127.0.0.1:55685 - "POST /api/emails/generate HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:08,664 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'json_invalid', 'loc': ('body', 1), 'msg': 'JSON decode error', 'input': {}, 'ctx': {'error': 'Expecting property name enclosed in double quotes'}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\emails.py", line 157, in generate_email
+    POST /api/emails/generate
+INFO:     127.0.0.1:55685 - "POST /api/emails/generate HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:08,666 - app.middleware.error_handler - WARNING - Validation error: 2 validation errors:
+  {'type': 'string_too_short', 'loc': ('body', 'action_type'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}
+  {'type': 'string_too_short', 'loc': ('body', 'description'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\activities.py", line 18, in create_activity
+    POST /api/activities
+INFO:     127.0.0.1:55685 - "POST /api/activities HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:08,668 - app.middleware.error_handler - WARNING - Validation error: 2 validation errors:
+  {'type': 'missing', 'loc': ('body', 'action_type'), 'msg': 'Field required', 'input': {}}
+  {'type': 'missing', 'loc': ('body', 'description'), 'msg': 'Field required', 'input': {}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\activities.py", line 18, in create_activity
+    POST /api/activities
+INFO:     127.0.0.1:55685 - "POST /api/activities HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:08,670 - app.middleware.error_handler - WARNING - Validation error: 2 validation errors:
+  {'type': 'missing', 'loc': ('body', 'company_name'), 'msg': 'Field required', 'input': {}}
+  {'type': 'missing', 'loc': ('body', 'job_description'), 'msg': 'Field required', 'input': {}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\resumes.py", line 17, in generate_resume
+    POST /api/resumes/generate
+INFO:     127.0.0.1:55685 - "POST /api/resumes/generate HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:08,672 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'string_too_short', 'loc': ('body', 'role'), 'msg': 'String should have at least 1 character', 'input': '', 'ctx': {'min_length': 1}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\emails.py", line 146, in quick_generate_email
+    POST /api/emails/quick
+INFO:     127.0.0.1:55685 - "POST /api/emails/quick HTTP/1.1" 422 Unprocessable Content
+2026-07-31 14:30:08,675 - app.middleware.error_handler - WARNING - Validation error: 1 validation error:
+  {'type': 'value_error', 'loc': ('body', 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 20, in create_project
+    POST /api/projects/
+INFO:     127.0.0.1:55685 - "POST /api/projects/ HTTP/1.1" 422 Unprocessable Content
+INFO:     127.0.0.1:55685 - "GET /api/projects/1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55685 - "PUT /api/projects/1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55685 - "DELETE /api/projects/1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55685 - "GET /api/emails/project/1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55685 - "DELETE /api/emails/1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55685 - "DELETE /api/documents/1 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55685 - "GET /api/resumes/2 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "DELETE /api/activities/99999 HTTP/1.1" 404 Not Found
+INFO:     127.0.0.1:55685 - "POST /api/projects/ HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55685 - "DELETE /api/projects/10 HTTP/1.1" 204 No Content
+2026-07-31 14:30:09,156 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55685 - "POST /api/emails/from-jd HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "POST /api/projects/ HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55685 - "GET /api/projects/10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "PUT /api/projects/10 HTTP/1.1" 200 OK
+2026-07-31 14:30:11,209 - faiss.loader - INFO - Loading faiss with AVX2 support.
+2026-07-31 14:30:11,210 - faiss.loader - INFO - Could not load library with AVX2 support due to:
+ModuleNotFoundError("No module named 'faiss.swigfaiss_avx2'")
+2026-07-31 14:30:11,210 - faiss.loader - INFO - Loading faiss.
+2026-07-31 14:30:11,236 - faiss.loader - INFO - Successfully loaded faiss.
+INFO:     127.0.0.1:55685 - "POST /api/documents/ HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55685 - "GET /api/documents/project/10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "PUT /api/documents/11 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "DELETE /api/documents/11 HTTP/1.1" 204 No Content
+2026-07-31 14:30:11,637 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+2026-07-31 14:30:15,085 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55685 - "POST /api/emails/generate HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55685 - "GET /api/emails/project/10 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "GET /api/emails/17 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "PUT /api/emails/17 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "DELETE /api/emails/17 HTTP/1.1" 204 No Content
+2026-07-31 14:30:22,519 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55685 - "POST /api/resumes/generate HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55685 - "GET /api/resumes/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "GET /api/resumes/8 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "PUT /api/resumes/8 HTTP/1.1" 200 OK
+2026-07-31 14:30:26,342 - google_genai.models - INFO - AFC is enabled with max remote calls: 10.
+INFO:     127.0.0.1:55685 - "POST /api/resumes/8/ats-score HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "DELETE /api/resumes/8 HTTP/1.1" 204 No Content
+2026-07-31 14:30:32,462 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55685 - "POST /api/resumes/generate HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55685 - "POST /api/resumes/8/ats-score HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:55685 - "DELETE /api/resumes/8 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:55685 - "POST /api/activities HTTP/1.1" 201 Created
+INFO:     127.0.0.1:55685 - "GET /api/activities HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "PUT /api/activities/1 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "DELETE /api/activities/1 HTTP/1.1" 204 No Content
+2026-07-31 14:30:34,988 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:55685 - "POST /api/emails/quick HTTP/1.1" 200 OK
+INFO:     127.0.0.1:55685 - "DELETE /api/projects/10 HTTP/1.1" 204 No Content
+INFO:     127.0.0.1:59789 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59789 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59789 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59789 - "OPTIONS /api/projects/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65309 - "OPTIONS /api/projects/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:59789 - "OPTIONS /api/projects/ HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65309 - "OPTIONS /api/projects/ HTTP/1.1" 200 OK
+2026-07-31 14:39:12,347 - app.middleware.error_handler - ERROR - Unexpected error: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+INFO:     127.0.0.1:59789 - "GET /api/projects/ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+2026-07-31 14:39:12,357 - app.middleware.error_handler - ERROR - Unexpected error: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+INFO:     127.0.0.1:65309 - "GET /api/projects/ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+2026-07-31 14:39:12,648 - app.middleware.error_handler - ERROR - Unexpected error: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+INFO:     127.0.0.1:52400 - "GET /api/projects/ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+2026-07-31 14:39:12,653 - app.middleware.error_handler - ERROR - Unexpected error: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+INFO:     127.0.0.1:64134 - "GET /api/projects/ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+INFO:     127.0.0.1:51081 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57760 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61598 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64703 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:49274 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64703 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64703 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58121 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52116 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63801 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52116 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52116 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:65464 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50288 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:54744 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50288 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:50288 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64441 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64441 - "GET /api/emails/project/7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:64444 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51723 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62397 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51723 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51723 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57132 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57132 - "GET /api/emails/project/7 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:57133 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52993 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52797 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52993 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:52993 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:60010 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51053 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:63077 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51053 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51053 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:62299 - "OPTIONS /api/projects/ HTTP/1.1" 200 OK
+2026-07-31 14:53:43,633 - app.middleware.error_handler - ERROR - Unexpected error: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+INFO:     127.0.0.1:62299 - "GET /api/projects/ HTTP/1.1" 500 Internal Server Error
+ERROR:    Exception in ASGI application
+Traceback (most recent call last):
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\protocols\http\httptools_impl.py", line 422, in run_asgi
+    result = await app(  # type: ignore[func-returns-value]
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+        self.scope, self.receive, self.send
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\uvicorn\middleware\proxy_headers.py", line 63, in __call__
+    return await self.app(scope, receive, send)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\applications.py", line 1163, in __call__
+    await super().__call__(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\applications.py", line 90, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 186, in __call__
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\errors.py", line 164, in __call__
+    await self.app(scope, receive, _send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 96, in __call__
+    await self.simple_response(scope, receive, send, request_headers=headers)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\cors.py", line 154, in simple_response
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\middleware\exceptions.py", line 63, in __call__
+    await wrap_app_handling_exceptions(self.app, conn)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\middleware\asyncexitstack.py", line 18, in __call__
+    await self.app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\routing.py", line 660, in __call__
+    await self.middleware_stack(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2691, in app
+    await route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1772, in handle
+    await self.original_router.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 2746, in handle
+    await included_router._handle_selected(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1792, in _handle_selected
+    await original_route.handle(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 1271, in handle
+    await app(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 156, in app
+    await wrap_app_handling_exceptions(app, request)(scope, receive, send)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 53, in wrapped_app
+    raise exc
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\starlette\_exception_handler.py", line 42, in wrapped_app
+    await app(scope, receive, sender)
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 142, in app
+    response = await f(request)
+               ^^^^^^^^^^^^^^^^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 719, in app
+    content = await serialize_response(
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+    ...<11 lines>...
+    )
+    ^
+  File "D:\AI Cold Email Generator\backend\venv\Lib\site-packages\fastapi\routing.py", line 322, in serialize_response
+    raise ResponseValidationError(
+    ...<3 lines>...
+    )
+fastapi.exceptions.ResponseValidationError: 1 validation error:
+  {'type': 'value_error', 'loc': ('response', 1, 'name'), 'msg': 'Value error, name must not be empty', 'input': '   ', 'ctx': {'error': ValueError('name must not be empty')}}
+
+  File "D:\AI Cold Email Generator\backend\app\api\projects.py", line 12, in get_projects
+    GET /api/projects/
+INFO:     127.0.0.1:49164 - "OPTIONS /api/emails/from-jd HTTP/1.1" 200 OK
+2026-07-31 14:53:48,914 - httpx - INFO - HTTP Request: POST http://localhost:11434/api/chat "HTTP/1.1 200 OK"
+INFO:     127.0.0.1:64834 - "POST /api/auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51192 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:58927 - "OPTIONS /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51192 - "GET /api/auth/me HTTP/1.1" 200 OK
+INFO:     127.0.0.1:51192 - "GET /api/auth/me HTTP/1.1" 200 OK

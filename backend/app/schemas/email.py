@@ -1,12 +1,43 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, Field, field_validator
 from typing import Optional
 from datetime import datetime
 
 class QuickEmailRequest(BaseModel):
-    role: str
+    role: str = Field(..., min_length=1)
+
+    @field_validator("role")
+    @classmethod
+    def strip_role(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("role must not be empty")
+        return v
 
 class QuickEmailResponse(BaseModel):
     email_content: str
+
+class JDEmailResponse(BaseModel):
+    id: Optional[int] = None
+    subject: str
+    body: str
+    saved: bool = False
+
+class TextPromptRequest(BaseModel):
+    text: str = Field(..., min_length=1)
+
+    @field_validator("text")
+    @classmethod
+    def strip_text(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("text must not be empty")
+        return v
+
+class TextPromptResponse(BaseModel):
+    id: Optional[int] = None
+    subject: str
+    body: str
+    saved: bool = False
 
 class EmailGenerateRequest(BaseModel):
     project_id: int
@@ -35,3 +66,22 @@ class EmailOut(BaseModel):
 
     class Config:
         from_attributes = True
+
+class ContextEmailRequest(BaseModel):
+    prompt: str = Field(..., min_length=5, max_length=5000)
+    tone: Optional[str] = "Professional"
+
+    @field_validator("prompt")
+    @classmethod
+    def strip_prompt(cls, v: str) -> str:
+        v = v.strip()
+        if not v:
+            raise ValueError("prompt must not be empty")
+        return v
+
+class ContextEmailResponse(BaseModel):
+    id: Optional[int] = None
+    subject: str
+    body: str
+    saved: bool = False
+

@@ -23,6 +23,8 @@ pypdf
 docx2txt
 langchain-google-genai
 langchain-huggingface
+langchain-ollama
+ollama
 slowapi
 pytest-cov
 pytest-mock

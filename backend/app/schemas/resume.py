@@ -37,3 +37,20 @@ class ResumeOut(BaseModel):
 class ResumeUpdate(BaseModel):
     resume_content: Optional[str] = None
     job_title: Optional[str] = None
+
+class ResumeParseRequest(BaseModel):
+    resume_text: str
+
+class ResumeParseResponse(BaseModel):
+    name: str
+    contact: str
+    location: str
+    education: str
+    skills: List[str]
+
+class ATSResumeGenerateRequest(BaseModel):
+    parsed_info: str # JSON string of the parsed info
+    job_description: str
+
+class ATSResumeGenerateResponse(BaseModel):
+    resume_markdown: str

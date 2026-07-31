@@ -1,8 +1,8 @@
 import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, type Variants, useInView, animate } from 'framer-motion';
-import { useThemeStore } from '../store/useThemeStore';
-import { Sun, Moon, ArrowRight, BookOpen, Cpu, Shield, Layers, Brain, GitBranch, Globe, Server, Zap, Sparkles, Users, MessageSquare, Briefcase } from 'lucide-react';
+import ThemeToggle from '../components/ThemeToggle';
+import { ArrowRight, BookOpen, Cpu, Shield, Layers, Brain, GitBranch, Globe, Server, Zap, Sparkles, Users, MessageSquare, Briefcase, Database } from 'lucide-react';
 import Lenis from 'lenis';
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number];
@@ -108,22 +108,33 @@ function TechStack() {
     { name: 'FAISS', icon: Layers },
     { name: 'Ollama', icon: Brain },
     { name: 'Gemma', icon: Globe },
+    { name: 'RAG', icon: Layers },
+    { name: 'Vector DB', icon: Database },
   ];
+  const row = [...logos, ...logos, ...logos];
   return (
-    <motion.div
-      initial={{ opacity: 0 }}
-      whileInView={{ opacity: 0.3 }}
-      viewport={{ once: true }}
-      transition={{ duration: 0.8, delay: 0.3 }}
-      className="flex flex-wrap items-center justify-center gap-6 md:gap-10"
-    >
-      {logos.map((l) => (
-        <div key={l.name} className="flex items-center gap-2 text-muted-foreground">
-          <l.icon className="w-4 h-4" />
-          <span className="text-sm font-medium">{l.name}</span>
-        </div>
-      ))}
-    </motion.div>
+    <div className="relative w-full overflow-hidden py-2 [mask-image:linear-gradient(to_right,transparent,black_15%,black_85%,transparent)]">
+      <motion.div
+        initial={{ opacity: 0 }}
+        whileInView={{ opacity: 0.35 }}
+        viewport={{ once: true }}
+        transition={{ duration: 0.8, delay: 0.2 }}
+        className="flex w-max"
+      >
+        <motion.div
+          animate={{ x: ['0%', '-33.333%'] }}
+          transition={{ duration: 28, repeat: Infinity, ease: 'linear' }}
+          className="flex shrink-0 items-center gap-10 pr-10"
+        >
+          {row.map((l, i) => (
+            <div key={`${l.name}-${i}`} className="flex items-center gap-2 text-muted-foreground whitespace-nowrap">
+              <l.icon className="w-4 h-4" />
+              <span className="text-sm font-medium">{l.name}</span>
+            </div>
+          ))}
+        </motion.div>
+      </motion.div>
+    </div>
   );
 }
 
@@ -179,7 +190,6 @@ function AnimatedCounter({ value }: { value: string }) {
 }
 
 export default function Landing() {
-  const { theme, toggleTheme } = useThemeStore();
   const [loaderPhase, setLoaderPhase] = useState<'loading' | 'revealing' | 'done'>('loading');
 
   useEffect(() => {
@@ -264,9 +274,7 @@ export default function Landing() {
               <span className="text-base font-semibold tracking-tight">ColdForge</span>
             </div>
             <div className="flex items-center gap-3">
-              <button onClick={toggleTheme} className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors">
-                {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-              </button>
+              <ThemeToggle />
               <Link to="/login" className="text-sm text-muted-foreground hover:text-foreground transition-colors px-3 py-2 hidden sm:block">Sign in</Link>
               <Link to="/register" className="inline-flex items-center gap-1.5 px-4 py-2 text-sm font-medium rounded-lg bg-primary text-primary-foreground hover:bg-primary/90 transition-all shadow-[0_1px_8px_-3px_hsl(var(--primary)/0.35)]">Get Started <ArrowRight className="w-3.5 h-3.5" /></Link>
             </div>
@@ -360,8 +368,16 @@ export default function Landing() {
             <h1 className="text-[clamp(2.2rem,5.5vw,4rem)] font-bold tracking-tight leading-[1.08] mb-6">
               <RevealText text="AI cold emails" dir="ltr" delay={0.2} />
               <br />
-              <span className="text-primary">
-                <RevealText text="that read human." dir="ltr" delay={0.6} />
+              <span className="relative inline-block overflow-hidden">
+                <motion.span
+                  initial={{ y: '100%' }}
+                  whileInView={{ y: '0%' }}
+                  viewport={{ once: true }}
+                  transition={{ duration: 0.6, ease: easeOut, delay: 0.6 }}
+                  className="inline-block bg-gradient-to-r from-primary via-secondary to-primary bg-[length:200%_auto] animate-gradient-x bg-clip-text text-transparent"
+                >
+                  that read human.
+                </motion.span>
               </span>
             </h1>
 

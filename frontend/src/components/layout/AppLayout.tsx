@@ -1,25 +1,26 @@
 import { useEffect, useState, useCallback, useRef } from 'react';
 import { Outlet, useNavigate, Link, useLocation } from 'react-router-dom';
 import { useAuthStore } from '../../store/useAuthStore';
-import { useThemeStore } from '../../store/useThemeStore';
 import ErrorBoundary from '../ErrorBoundary';
+import ThemeToggle from '../ThemeToggle';
 import {
   LayoutDashboard, Sparkles, FileText, Building2, FileSpreadsheet,
-  Database, FileUp, Clock, BarChart3, Bell, Calendar, Settings,
-  HelpCircle, LogOut, Sun, Moon, Search, ChevronLeft, ChevronRight,
+  Database, Clock, BarChart3, Bell, Calendar, Settings,
+  HelpCircle, LogOut, Search, ChevronLeft, ChevronRight,
   Menu, X, Check, Archive, Inbox, ScrollText
 } from 'lucide-react';
 
 const navItems = [
   { name: 'Dashboard', path: '/dashboard', icon: LayoutDashboard },
-  { name: 'Inbox', path: '/dashboard', icon: Inbox },
-  { name: 'AI Email Generator', path: '/campaign/new', icon: Sparkles },
+  { name: 'Inbox', path: '/dashboard', icon: Inbox, key: 'inbox' },
+  { name: 'JD Email Generator', path: '/email-generator', icon: FileText },
+  { name: 'Cold Email Generator', path: '/prompt-email', icon: Sparkles },
+  { name: 'Resume Builder', path: '/resume-builder', icon: ScrollText },
   { name: 'Applications', path: '/applications', icon: FileText },
   { name: 'Companies', path: '/companies', icon: Building2 },
   { name: 'Resumes', path: '/resumes', icon: ScrollText },
   { name: 'Templates', path: '/templates', icon: FileSpreadsheet },
   { name: 'Knowledge Base', path: '/knowledge', icon: Database },
-  { name: 'Documents', path: '/project/0', icon: FileUp },
   { name: 'History', path: '/history', icon: Clock },
   { name: 'Analytics', path: '/analytics', icon: BarChart3 },
   { name: 'Notifications', path: '/notifications', icon: Bell },
@@ -36,7 +37,6 @@ const notifications = [
 
 export default function AppLayout() {
   const { user, isAuthenticated, isLoading, logout, fetchUser } = useAuthStore();
-  const { theme, toggleTheme } = useThemeStore();
   const navigate = useNavigate();
   const location = useLocation();
   const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
@@ -95,7 +95,7 @@ export default function AppLayout() {
   }
 
   const isActive = (path: string) => {
-    if (path === '/project/0') return location.pathname.startsWith('/project/');
+    if (path === '/knowledge') return location.pathname.startsWith('/knowledge') || location.pathname.startsWith('/project/');
     return location.pathname.startsWith(path);
   };
 
@@ -230,7 +230,7 @@ export default function AppLayout() {
         <nav className="flex-1 overflow-y-auto scrollbar-thin px-2 py-3 space-y-0.5" aria-label="Main Navigation">
           {mainNav.map((item) => (
             <Link
-              key={item.path}
+              key={item.key || item.path}
               to={item.path}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
                 isActive(item.path)
@@ -248,7 +248,7 @@ export default function AppLayout() {
         <div className="border-t border-border pt-2 px-2 pb-3 space-y-0.5">
           {bottomNav.map((item) => (
             <Link
-              key={item.path}
+              key={item.key || item.path}
               to={item.path}
               className={`flex items-center gap-3 px-3 py-2 rounded-lg text-sm transition-all duration-150 ${
                 isActive(item.path)
@@ -296,13 +296,9 @@ export default function AppLayout() {
           </button>
 
           <div className="flex items-center gap-1 ml-auto">
-            <button
-              onClick={toggleTheme}
-              aria-label={`Switch to ${theme === 'dark' ? 'light' : 'dark'} mode`}
-              className="p-2 rounded-lg text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            >
-              {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
-            </button>
+            <div className="hidden sm:flex px-1.5 py-1 rounded-lg hover:bg-muted transition-colors">
+              <ThemeToggle />
+            </div>
 
             <div className="relative">
               <button

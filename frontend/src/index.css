@@ -77,9 +77,44 @@
   .scrollbar-thin::-webkit-scrollbar-thumb:hover {
     @apply bg-muted-foreground/40;
   }
+  @keyframes gradient-x {
+    0%, 100% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+  }
+  .animate-gradient-x {
+    animation: gradient-x 5s ease infinite;
+  }
 }
 
 [data-reduced-motion="true"] * {
   animation-duration: 0.01ms !important;
   transition-duration: 0.01ms !important;
+}
+
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  .print-area,
+  .print-area * {
+    visibility: visible;
+  }
+  .print-area {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0 !important;
+    padding: 16px;
+    border: none !important;
+    background: #fff !important;
+    color: #000 !important;
+  }
+  .print-area .print-hide {
+    display: none !important;
+  }
+  .print-area .bg-background,
+  .print-area .bg-muted\/20 {
+    background: #fff !important;
+  }
 }

@@ -1,13 +1,16 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status, UploadFile, File
 from sqlalchemy.orm import Session
 from typing import List, Any
+import io
 from app.database import get_db
 from app.models.user import User
 from app.models.project import Project
 from app.models.resume import Resume
 from app.schemas.resume import (
     ResumeGenerateRequest, ResumeOut, ResumeUpdate,
-    ATSAnalysisRequest, ATSAnalysisResponse
+    ATSAnalysisRequest, ATSAnalysisResponse,
+    ResumeParseRequest, ResumeParseResponse,
+    ATSResumeGenerateRequest, ATSResumeGenerateResponse
 )
 from app.auth.jwt import get_current_active_user
 from app.services.ai_service import ai_service
@@ -187,3 +190,74 @@ async def analyze_resume_ats(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
             detail=f"ATS analysis failed: {str(e)}"
         )
+
+@router.post("/parse", response_model=ResumeParseResponse)
+async def parse_resume(
+    request: ResumeParseRequest,
+    current_user: User = Depends(get_current_active_user)
+) -> Any:
+    try:
+        parsed_data = await ai_service.parse_resume_info(request.resume_text)
+        return ResumeParseResponse(
+            name=parsed_data.get("name", "Unknown"),
+            contact=parsed_data.get("contact", "Unknown"),
+            location=parsed_data.get("location", "Unknown"),
+            education=parsed_data.get("education", "Unknown"),
+            skills=parsed_data.get("skills", [])
+        )
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Resume parsing failed: {str(e)}"
+        )
+
+@router.post("/build", response_model=ATSResumeGenerateResponse)
+async def build_ats_resume(
+    request: ATSResumeGenerateRequest,
+    current_user: User = Depends(get_current_active_user)
+) -> Any:
+    try:
+        resume_markdown = await ai_service.build_ats_resume(
+            parsed_info=request.parsed_info,
+            job_description=request.job_description
+        )
+        return ATSResumeGenerateResponse(resume_markdown=resume_markdown)
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"ATS resume generation failed: {str(e)}"
+        )
+
+@router.post("/extract-text")
+async def extract_text_from_file(
+    file: UploadFile = File(...),
+    current_user: User = Depends(get_current_active_user)
+) -> Any:
+    filename = file.filename.lower()
+    if not (filename.endswith(".pdf") or filename.endswith(".docx") or filename.endswith(".doc")):
+        raise HTTPException(status_code=400, detail="Only PDF and DOCX files are supported")
+        
+    try:
+        content = await file.read()
+        text = ""
+        if filename.endswith(".pdf"):
+            import PyPDF2
+            pdf_reader = PyPDF2.PdfReader(io.BytesIO(content))
+            for page in pdf_reader.pages:
+                text += page.extract_text() + "\n"
+        elif filename.endswith(".docx") or filename.endswith(".doc"):
+            import docx
+            doc = docx.Document(io.BytesIO(content))
+            for para in doc.paragraphs:
+                text += para.text + "\n"
+                
+        if not text.strip():
+            raise HTTPException(status_code=400, detail="Could not extract any text from the document")
+            
+        return {"text": text.strip()}
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Failed to extract text from file: {str(e)}"
+        )
+

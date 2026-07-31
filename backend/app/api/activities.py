@@ -9,11 +9,13 @@ from app.auth.jwt import get_current_active_user
 
 router = APIRouter(prefix="/api/activities", tags=["activities"])
 
+@router.get("", response_model=List[ActivityOut])
 @router.get("/", response_model=List[ActivityOut])
 def get_activities(db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)) -> Any:
     activities = db.query(Activity).filter(Activity.user_id == current_user.id).order_by(Activity.created_at.desc()).all()
     return activities
 
+@router.post("", response_model=ActivityOut, status_code=status.HTTP_201_CREATED)
 @router.post("/", response_model=ActivityOut, status_code=status.HTTP_201_CREATED)
 def create_activity(activity_in: ActivityCreate, db: Session = Depends(get_db), current_user: User = Depends(get_current_active_user)) -> Any:
     activity = Activity(

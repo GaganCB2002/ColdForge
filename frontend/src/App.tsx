@@ -7,6 +7,9 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import NewProject from './pages/NewProject';
+import EmailGenerator from './pages/EmailGenerator';
+import ColdEmailPrompt from './pages/ColdEmailPrompt';
+import ResumeBuilder from './pages/ResumeBuilder';
 import ProjectDetail from './pages/ProjectDetail';
 import History from './pages/History';
 import Settings from './pages/Settings';
@@ -40,6 +43,9 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/campaign/new" element={<NewProject />} />
+          <Route path="/email-generator" element={<EmailGenerator />} />
+          <Route path="/prompt-email" element={<ColdEmailPrompt />} />
+          <Route path="/resume-builder" element={<ResumeBuilder />} />
           <Route path="/project/:id" element={<ProjectDetail />} />
           <Route path="/history" element={<History />} />
           <Route path="/settings" element={<Settings />} />

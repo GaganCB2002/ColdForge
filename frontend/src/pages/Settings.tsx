@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useAuthStore } from '../store/useAuthStore';
-import { useThemeStore } from '../store/useThemeStore';
+import ThemeToggle from '../components/ThemeToggle';
 import api from '../lib/api';
 import {
   User, Palette, Bell, Bot, Shield, Database,
@@ -20,7 +20,6 @@ const tabs: { id: Tab; label: string; icon: any }[] = [
 
 export default function Settings() {
   const { user, fetchUser } = useAuthStore();
-  const { theme, toggleTheme } = useThemeStore();
   const [activeTab, setActiveTab] = useState<Tab>('profile');
 
   const [formData, setFormData] = useState({
@@ -144,12 +143,7 @@ export default function Settings() {
                 <p className="text-sm font-medium">Dark Mode</p>
                 <p className="text-xs text-muted-foreground mt-0.5">Switch between light and dark theme</p>
               </div>
-              <button
-                onClick={toggleTheme}
-                className={`relative w-11 h-6 rounded-full transition-colors ${theme === 'dark' ? 'bg-primary' : 'bg-muted-foreground/30'}`}
-              >
-                <div className={`absolute top-0.5 w-5 h-5 rounded-full bg-white shadow-sm transition-transform ${theme === 'dark' ? 'translate-x-[22px]' : 'translate-x-0.5'}`} />
-              </button>
+              <ThemeToggle />
             </div>
             <div className="flex items-center justify-between py-3 border-t border-border">
               <div>

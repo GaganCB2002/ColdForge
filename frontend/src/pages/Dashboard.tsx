@@ -1,14 +1,15 @@
-import { useState, useEffect, useRef, type FormEvent } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion, type Variants, useInView, animate } from 'framer-motion';
 import api from '../lib/api';
 import { useAuthStore } from '../store/useAuthStore';
+import ColdEmailGenerator from '../components/ColdEmailGenerator';
 import {
   Plus, Sparkles, Mail, Building2, Users, Clock, FileText,
   Bell, Calendar, TrendingUp, Briefcase, Target, CheckCircle2,
   Send, Upload, ChevronRight, BarChart3, MessageSquare, Edit3,
   HelpCircle, Bot, Copy, Loader2, Inbox, Search,
-  Check, AlertCircle, ExternalLink
+  AlertCircle, ExternalLink
 } from 'lucide-react';
 
 const easeOut = [0.16, 1, 0.3, 1] as [number, number, number, number];
@@ -85,15 +86,6 @@ export default function Dashboard() {
   const [projects, setProjects] = useState<any[]>([]);
   const [allEmails, setAllEmails] = useState<any[]>([]);
 
-  // Role → Email Generator state
-  const [jobRole, setJobRole] = useState('');
-  const [jdCompany, setJdCompany] = useState('');
-  const [jdRecipient, setJdRecipient] = useState('');
-  const [isGenerating, setIsGenerating] = useState(false);
-  const [generatedEmail, setGeneratedEmail] = useState<{ subject: string; body: string } | null>(null);
-  const [jdCopied, setJdCopied] = useState(false);
-  const [jdError, setJdError] = useState('');
-
   // Inbox state
   const [inboxSearch, setInboxSearch] = useState('');
   const [inboxFilter, setInboxFilter] = useState<'all' | 'sent' | 'pending'>('all');
@@ -141,43 +133,6 @@ export default function Dashboard() {
     } finally {
       setInboxLoading(false);
     }
-  };
-
-  const handleGenerateEmail = async (e: FormEvent) => {
-    e.preventDefault();
-    if (!jobRole.trim()) return;
-
-    setIsGenerating(true);
-    setJdError('');
-    setGeneratedEmail(null);
-
-    try {
-      const res = await api.post('/api/emails/quick', { role: jobRole });
-      const content = res.data.email_content || '';
-      const subjectMatch = content.match(/^Subject:\s*(.+)$/im);
-      const subject = subjectMatch ? subjectMatch[1] : 'Cold Email from ColdForge';
-      let body = content;
-      if (subjectMatch) {
-        const idx = content.indexOf('\n');
-        body = idx !== -1 ? content.slice(idx + 1).trim() : content;
-      }
-      setGeneratedEmail({ subject, body });
-    } catch {
-      setJdError('Generation failed. Using demo mode — here is a sample email.');
-      setGeneratedEmail({
-        subject: `Excited to apply for the ${jobRole} position`,
-        body: `Dear ${jdRecipient || 'Hiring Manager'},\n\nI am writing to express my strong interest in the ${jobRole} role at ${jdCompany || 'your company'}. With my background and passion for this field, I am confident I can make a meaningful contribution to your team.\n\nI have attached my resume for your review and would welcome the chance to discuss how my experience aligns with this opportunity.\n\nBest regards,\n${user?.full_name || 'Your Name'}`
-      });
-    } finally {
-      setIsGenerating(false);
-    }
-  };
-
-  const copyJdEmail = () => {
-    if (!generatedEmail) return;
-    navigator.clipboard.writeText(`Subject: ${generatedEmail.subject}\n\n${generatedEmail.body}`);
-    setJdCopied(true);
-    setTimeout(() => setJdCopied(false), 2000);
   };
 
   const today = new Date();
@@ -251,17 +206,26 @@ export default function Dashboard() {
   return (
     <motion.div initial="initial" animate="animate" variants={stagger} className="space-y-6">
       {/* Welcome Card */}
-      <motion.div variants={fadeUp} className="rounded-xl border border-border bg-card overflow-hidden">
-        <div className="p-6 lg:p-8">
+      <motion.div variants={fadeUp} className="relative rounded-xl border border-border bg-card overflow-hidden">
+        <div className="pointer-events-none absolute -top-20 -right-16 w-64 h-64 rounded-full bg-primary/10 blur-3xl" />
+        <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary/40 to-transparent" />
+        <div className="relative p-6 lg:p-8">
           <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
             <div>
+              <div className="flex items-center gap-2 mb-1.5">
+                <span className="relative flex w-2 h-2">
+                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-success opacity-60" />
+                  <span className="relative inline-flex rounded-full w-2 h-2 bg-success" />
+                </span>
+                <span className="text-[11px] font-medium text-muted-foreground uppercase tracking-wider">Dashboard Overview</span>
+              </div>
               <h1 className="text-xl lg:text-2xl font-bold tracking-tight">
                 {greeting}, {user?.full_name?.split(' ')[0] || 'there'}
               </h1>
               <p className="text-sm text-muted-foreground mt-1">{dateStr}</p>
             </div>
             <div className="flex flex-wrap gap-2">
-              <Link to="/campaign/new" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
+              <Link to="/email-generator" className="inline-flex items-center gap-2 px-4 py-2 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors shadow-sm">
                 <Sparkles className="w-4 h-4" />
                 Generate Email
               </Link>
@@ -315,124 +279,7 @@ export default function Dashboard() {
       )}
 
       {/* JD → Cold Email Generator */}
-      <motion.div variants={fadeSlideUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-40px' }} className="rounded-xl border border-border bg-card overflow-hidden">
-        <div className="p-6 lg:p-8">
-          <div className="flex items-center gap-3 mb-1">
-            <div className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-primary" />
-            </div>
-            <div>
-              <h2 className="text-base font-semibold">Cold Email Generator</h2>
-              <p className="text-xs text-muted-foreground">Enter a job role and get a targeted cold email in seconds.</p>
-            </div>
-          </div>
-
-          <form onSubmit={handleGenerateEmail} className="mt-5 space-y-4">
-            <div>
-              <label htmlFor="job-role" className="block text-xs font-medium text-foreground mb-1.5">Job Role *</label>
-              <input
-                id="job-role"
-                type="text"
-                required
-                value={jobRole}
-                onChange={(e) => setJobRole(e.target.value)}
-                className="w-full px-3.5 py-2.5 bg-background border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors placeholder:text-muted-foreground"
-                placeholder="e.g. Java Developer, Python Full Stack, ML Engineer, Data Scientist"
-              />
-            </div>
-
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-              <div>
-                <label htmlFor="jd-company" className="block text-xs font-medium text-foreground mb-1.5">Target Company</label>
-                <input
-                  id="jd-company"
-                  type="text"
-                  value={jdCompany}
-                  onChange={(e) => setJdCompany(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-background border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors placeholder:text-muted-foreground"
-                  placeholder="e.g. Google"
-                />
-              </div>
-              <div>
-                <label htmlFor="jd-recipient" className="block text-xs font-medium text-foreground mb-1.5">Recipient Name</label>
-                <input
-                  id="jd-recipient"
-                  type="text"
-                  value={jdRecipient}
-                  onChange={(e) => setJdRecipient(e.target.value)}
-                  className="w-full px-3.5 py-2.5 bg-background border border-input rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-ring focus:border-transparent transition-colors placeholder:text-muted-foreground"
-                  placeholder="e.g. Hiring Manager"
-                />
-              </div>
-            </div>
-
-            {jdError && (
-              <div role="alert" className="flex items-start gap-2.5 px-4 py-3 rounded-lg bg-warning/10 border border-warning/20 text-sm text-warning-foreground">
-                <AlertCircle className="w-4 h-4 shrink-0 mt-0.5" />
-                <span>{jdError}</span>
-              </div>
-            )}
-
-            <div className="flex justify-end">
-              <button
-                type="submit"
-                disabled={isGenerating || !jobRole.trim()}
-                className="inline-flex items-center gap-2 px-5 py-2.5 rounded-lg bg-primary text-primary-foreground text-sm font-medium hover:bg-primary/90 transition-colors disabled:opacity-50 shadow-sm"
-              >
-                {isGenerating ? (
-                  <Loader2 className="w-4 h-4 animate-spin" />
-                ) : (
-                  <Sparkles className="w-4 h-4" />
-                )}
-                {isGenerating ? 'Generating...' : 'Generate Cold Email'}
-              </button>
-            </div>
-          </form>
-
-          {/* Generated Email Result */}
-          {generatedEmail && (
-            <motion.div
-              initial={{ opacity: 0, y: 16 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="mt-6 rounded-lg border border-border bg-muted/20 overflow-hidden"
-            >
-              <div className="flex items-center justify-between px-5 py-3 border-b border-border bg-muted/30">
-                <div className="flex items-center gap-2">
-                  <Mail className="w-4 h-4 text-primary" />
-                  <span className="text-sm font-semibold">Generated Email</span>
-                </div>
-                <div className="flex items-center gap-1">
-                  <button
-                    onClick={copyJdEmail}
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                  >
-                    {jdCopied ? <Check className="w-3.5 h-3.5" /> : <Copy className="w-3.5 h-3.5" />}
-                    {jdCopied ? 'Copied' : 'Copy'}
-                  </button>
-                  <a
-                    href={`mailto:?subject=${encodeURIComponent(generatedEmail.subject)}&body=${encodeURIComponent(generatedEmail.body)}`}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-                  >
-                    <Send className="w-3.5 h-3.5" />
-                    Send
-                  </a>
-                </div>
-              </div>
-              <div className="px-5 py-3 border-b border-border bg-background">
-                <p className="text-xs text-muted-foreground uppercase tracking-wider font-medium mb-1">Subject</p>
-                <p className="text-sm font-medium">{generatedEmail.subject}</p>
-              </div>
-              <div className="px-5 py-4 bg-background">
-                <div className="whitespace-pre-wrap text-sm leading-relaxed text-foreground">
-                  {generatedEmail.body}
-                </div>
-              </div>
-            </motion.div>
-          )}
-        </div>
-      </motion.div>
+      <ColdEmailGenerator />
 
       {/* Email Inbox */}
       <motion.div variants={fadeSlideUp} initial="hidden" whileInView="visible" viewport={{ once: true, margin: '-40px' }} className="rounded-xl border border-border bg-card overflow-hidden">
@@ -835,7 +682,7 @@ export default function Dashboard() {
           <h2 className="text-sm font-semibold">Quick Actions</h2>
         </div>
         <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-6 gap-3">
-          <Link to="/campaign/new" className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/[0.02] transition-all group">
+          <Link to="/email-generator" className="flex flex-col items-center gap-2 p-4 rounded-lg border border-border hover:border-primary/40 hover:bg-primary/[0.02] transition-all group">
             <div className="w-10 h-10 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors">
               <Sparkles className="w-5 h-5 text-primary" />
             </div>
