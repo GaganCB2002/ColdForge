@@ -1,1 +1,7 @@
-Generic single-database configuration.
+Alembic migration environment for the AI Cold Email Generator backend.
+
+Apply the latest migrations with:
+
+    alembic upgrade head
+
+Database connection and SQLAlchemy metadata are configured in `alembic.ini` / `env.py`.

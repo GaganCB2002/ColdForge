@@ -71,7 +71,6 @@ export default function ResumeBuilder() {
       // Wait for state to update, then parse
       setTimeout(() => {
          // Auto-parse after extraction
-         const event = new Event('submit');
          const button = document.getElementById('parse-btn');
          if (button) button.click();
       }, 100);
